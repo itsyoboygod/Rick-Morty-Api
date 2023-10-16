@@ -1,8 +1,19 @@
-document.addEventListener('DOMContentLoaded', () => {
+import {callApi} from './characters.js'
+
+ document.addEventListener('DOMContentLoaded', async() => {
     function createP() { return document.createElement('p') }
     const characterList = document.getElementById('post_list');
     const loadMoreButton = document.getElementById("load-more")
     const section = document.getElementById("container")
+
+    
+            await callApi()
+            .then(response =>{
+                console.log(response)
+            })
+            .catch(error =>{
+                console.log(error)
+            })
 
     let nextPageUrl = 'https://rickandmortyapi.com/api/character';
     function fetchCharacters(url) {
@@ -78,6 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
             characterList.appendChild(li);
+            characterList.appendChild(loadMoreButton);
             section.appendChild(characterList);
         });
     }

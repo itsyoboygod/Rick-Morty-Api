@@ -162,3 +162,22 @@ li:nth-child(even){
     padding: 4px;
     text-align: center;
 }
+
+#load-more{
+    display: flex;
+    text-align: center;
+    margin: 5px auto;
+    padding: 15px;
+    backdrop-filter: blur(2px);
+    background-color: hsla(0,0%,100%,.1);
+    transition: 0.2s ease-in-out;
+    border: none;
+    border-radius: .5rem .5rem;
+}
+
+#load-more:hover{
+    backdrop-filter: blur(2px);
+    background: transparent;
+    background-color: hsla(0,0%,100%,.3);
+    cursor: pointer;
+}
