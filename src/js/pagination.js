@@ -1,22 +1,25 @@
-import {callApi} from './characters.js'
+import { callApi } from './characters.js'
 
- document.addEventListener('DOMContentLoaded', async() => {
+document.addEventListener('DOMContentLoaded', async () => {
     function createP() { return document.createElement('p') }
     const characterList = document.getElementById('post_list');
-    const loadMoreButton = document.getElementById("load-more")
+    const loadNextButton = document.getElementById('load-next');
+    const loadPreviousButton = document.getElementById('load-previous');
     const section = document.getElementById("container")
 
-    
-            await callApi()
-            .then(response =>{
-                console.log(response)
-            })
-            .catch(error =>{
-                console.log(error)
-            })
+    // await callApi()
+    //     .then(response => {
+    // 	response.forEach(result => {
+    //         console.log(`${result.name}`)
+    //         })
+    //     })
+    //     .catch(error => {
+    //         console.log(error)
+    //     })
 
-    let nextPageUrl = 'https://rickandmortyapi.com/api/character';
-    function fetchCharacters(url) {
+    let page = 1
+    let nextPageUrl = `https://rickandmortyapi.com/api/character/?page=${page}`;
+    async function fetchCharacters(url) {
         fetch(url)
             .then(response => {
                 if (!response.ok) {
@@ -25,23 +28,16 @@ import {callApi} from './characters.js'
                 return response.json();
             })
             .then(data => {
-                const characters = data.results;
-                displayCharacters(characters);
-
-                // Check if there's a next page
-                if (data.info.next) {
-                    nextPageUrl = data.info.next;
-                    loadMoreButton.disabled = false;
-                } else {
-                    loadMoreButton.disabled = true; // No more pages
-                }
+                const response = data.results;
+                // Clear the current list
+                characterList.innerHTML = '';
+                displayCharacters(response);
+                // Update pagination buttons based on response data
+                loadNextButton.disabled = !data.info.next;
+                loadPreviousButton.disabled = !data.info.prev;
             })
-            .catch(error => {
-                console.error('Error occurred while fetching data:', error);
-            });
     }
 
-    function createP() { return document.createElement('p') }
     function displayCharacters(characters) {
         characters.forEach(character => {
             const li = document.createElement('li');
@@ -58,7 +54,7 @@ import {callApi} from './characters.js'
             ahref.textContent = character.name;
 
             const idElement = createP()
-            idElement.setAttribute('id','id_character')
+            idElement.setAttribute('id', 'id_character')
             const urlElement = createP()
             const nameElement = createP()
             const statusElement = createP()
@@ -89,12 +85,25 @@ import {callApi} from './characters.js'
 
 
             characterList.appendChild(li);
-            characterList.appendChild(loadMoreButton);
+            characterList.appendChild(loadPreviousButton);
+            characterList.appendChild(loadNextButton);
             section.appendChild(characterList);
         });
     }
-    loadMoreButton.addEventListener('click', () => {
+
+    // Event listeners for Next and Previous buttons
+    loadNextButton.addEventListener('click', () => {
+        page++;
+        nextPageUrl = `https://rickandmortyapi.com/api/character/?page=${page}`;
         fetchCharacters(nextPageUrl);
+    });
+
+    loadPreviousButton.addEventListener('click', () => {
+        if (page > 1) {
+            page--;
+            nextPageUrl = `https://rickandmortyapi.com/api/character/?page=${page}`;
+            fetchCharacters(nextPageUrl);
+        }
     });
 
     const mainElement = document.querySelector('main');
