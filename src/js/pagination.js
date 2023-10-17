@@ -7,6 +7,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const loadPreviousButton = document.getElementById('load-previous');
     const section = document.getElementById("container")
 
+    const div_error = document.createElement("div")
+    div_error.setAttribute("id", "id_search-error-popup")
+
     // await callApi()
     //     .then(response => {
     // 	response.forEach(result => {
@@ -19,6 +22,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     let page = 1
     let nextPageUrl = `https://rickandmortyapi.com/api/character/?page=${page}`;
+
     async function fetchCharacters(url) {
         fetch(url)
             .then(response => {
@@ -42,6 +46,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         characters.forEach(character => {
             const li = document.createElement('li');
             li.classList.add('li__table');
+            const div_footer = document.getElementById('id_div-footer');
 
             const imgElement = document.createElement('img')
             imgElement.setAttribute("src", character.image)
@@ -83,15 +88,19 @@ document.addEventListener('DOMContentLoaded', async () => {
             infos_data_div.appendChild(genderElement);
             li.appendChild(infos_data_div);
 
+            const spanPag = document.getElementById("pagNum")
+            spanPag.textContent = page
+            spanPag.setAttribute("data-pag",page)
 
+            div_footer?.appendChild(loadPreviousButton);
+            div_footer?.appendChild(spanPag);
+            div_footer?.appendChild(loadNextButton);
             characterList.appendChild(li);
-            characterList.appendChild(loadPreviousButton);
-            characterList.appendChild(loadNextButton);
+            section.appendChild(div_footer);
             section.appendChild(characterList);
         });
     }
 
-    // Event listeners for Next and Previous buttons
     loadNextButton.addEventListener('click', () => {
         page++;
         nextPageUrl = `https://rickandmortyapi.com/api/character/?page=${page}`;
@@ -105,6 +114,19 @@ document.addEventListener('DOMContentLoaded', async () => {
             fetchCharacters(nextPageUrl);
         }
     });
+
+    const searchInput = document.getElementById("id_search");
+
+    searchInput.addEventListener("keypress", (event) => {
+        if (event.key === "Enter") {
+            page = 1;
+            const searchTerm = searchInput.value.trim();
+            nextPageUrl = `https://rickandmortyapi.com/api/character/?page=${page}&name=${searchTerm}`;
+            fetchCharacters(nextPageUrl);
+        }
+
+    });
+
 
     const mainElement = document.querySelector('main');
     mainElement.appendChild(section);

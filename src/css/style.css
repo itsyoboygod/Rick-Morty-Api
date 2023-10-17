@@ -43,6 +43,7 @@
 html{
     margin: 0;
     padding: 0;
+    scroll-behavior: smooth;
 }
 
 body{
@@ -92,12 +93,14 @@ a:hover{
     --column-count: 1;
     gap: 1rem;
     display: grid;
-    grid-template-columns: 
-        repeat(auto-fit, minmax(600px,  1fr));
+    grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
     background-color: var(--api-bckg-grey);
     margin: 0px;
     padding: 50px;
     list-style: none;
+    min-height: 99vh;
+    place-content: start;
+    scroll-snap-type: y mandatory;
 }
 
 li:nth-child(odd){
@@ -114,10 +117,10 @@ li:nth-child(even){
     /* outline: solid .5px var(--blue); */
     border-radius: 1rem 1rem;
     overflow: hidden;
-    
     width: 100%;
     height: 220px;
     font-family: monospace;
+    scroll-snap-align: center;
 }
 
 @media (width < 600px) {
@@ -160,22 +163,61 @@ li:nth-child(even){
     backdrop-filter: blur(2px);
     background: transparent;
     background-color: hsla(0,0%,100%,.3);
-    border-radius: 50%;
-    width: 15px;
+    border-radius: .3rem .3rem;
+    min-width: 15px;
     height: 15px;
     margin: 2px;
     padding: 4px;
     text-align: center;
 }
 
-.btns{
+#id_div-footer{
     position: fixed;
+    z-index: 1;
+    width: fit-content;
+    bottom: 5rem;
+    right: 2rem;
+    display: flex;
+    background-color: transparent;
+    transition: 0.2s ease-in-out;
+    border: none;
+    border-radius: 0.5rem 0.5rem;
+    color: var(--white);
+    margin: 5px;
+    padding: 5px;
+    opacity: .5;
+}
+
+#id_div-footer:hover{
+    opacity: 1;
+}
+
+#id_div-footer:focus-visible{
+    opacity: 1;
+}
+
+#id_search{
+    width: inherit;
+    margin: 5px;
+    padding: 10px;
+    backdrop-filter: blur(2px);
+    background-color: hsl(0deg 0% 0% / 50%);
+    transition: 0.2s ease-in-out;
+    border: none;
+    border-radius: 0.5rem 0.5rem;
+    color: var(--white);
+    font-family: monospace;
+}
+
+#id_search:focus-visible{
+    outline: 1px solid white;
+}
+
+.btns{
     z-index: 1;
     display: flex;
     text-align: center;
-    margin: 5px auto;
-    padding: 15px;
-    min-width: 100px;
+    padding: 10px;
     align-self: center;
     justify-content: center;
     backdrop-filter: blur(2px);
@@ -193,25 +235,74 @@ li:nth-child(even){
     cursor: pointer;
 }
 
-#load-previous{
-    right: 10%;
-    bottom: 17%;
+.btns:focus-visible{
+    outline: 1px solid white;
 }
 
-#load-previous:disabled{
-    opacity: .5;
+#load-previous{
+    margin: 0 0 0 auto;
+    transition: 0.2s ease-in-out;
 }
+
+#load-previous:hover{
+    font-size: 1.5rem;
+    transition: 0.2s ease-in-out;
+}
+
+#pagNum{
+    display: flex;
+    text-align: center;
+    margin: 2px;
+    padding: 2px;
+    align-items: center;
+    font-family: monospace;
+}
+
+#pagNum[data-pag]{
+    z-index: 1;
+    display: flex;
+    text-align: center;
+    padding: 10px;
+    align-self: center;
+    justify-content: center;
+    backdrop-filter: blur(2px);
+    background-color: hsla(0,0%,100%,.1);
+    transition: 0.2s ease-in-out;
+    border: none;
+    border-radius: .5rem .5rem;
+    color: var(--white);
+}
+
+#pagNum[data-pag="10"]{
+    background-color: red;
+}
+
+/* #pagNum::before{
+    content: attr(data-pag);
+} */
 
 #load-next{
-    right: 10%;
-    bottom: 10%;
+}
+
+#load-next:hover{
+    font-size: 1.5rem;
+    transition: 0.2s ease-in-out;
 }
 
 #load-previous:disabled {
     opacity: 0.5;
-    cursor: not-allowed; /* Use the not-allowed cursor when disabled */
+    cursor: not-allowed;
 }
 
 #load-previous:hover:disabled {
-    cursor: not-allowed; /* Override hover cursor when disabled */
+    cursor: not-allowed; 
+}
+
+#load-next:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+#load-next:hover:disabled {
+    cursor: not-allowed; 
 }
